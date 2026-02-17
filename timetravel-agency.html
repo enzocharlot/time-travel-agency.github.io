@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeTravel Agency — Voyages Beyond Time</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@200;300;400&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────
+       TOKENS & RESET
+    ──────────────────────────────────────────*/
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --obsidian: #070709;
+      --void: #0c0c10;
+      --charcoal: #16161e;
+      --steel: #1e1e2a;
+      --mist: #2a2a3a;
+      --gold: #c9a84c;
+      --gold-pale: #e8d5a0;
+      --gold-dim: #7a6330;
+      --ivory: #f0ece4;
+      --silver: #a8a8b8;
+      --ghost: rgba(201, 168, 76, .08);
+      --glow: rgba(201, 168, 76, .18);
+      --ff-display: 'Cinzel Decorative', serif;
+      --ff-serif: 'Cormorant Garamond', serif;
+      --ff-sans: 'Raleway', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--obsidian);
+      color: var(--ivory);
+      font-family: var(--ff-sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    ::selection {
+      background: var(--gold-dim);
+      color: var(--ivory);
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--void);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dim);
+      border-radius: 3px;
+    }
+
+    /* ─────────────────────────────────────────
+       NOISE OVERLAY
+    ──────────────────────────────────────────*/
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .5;
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ──────────────────────────────────────────*/
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: linear-gradient(to bottom, rgba(7, 7, 9, .9), transparent);
+      backdrop-filter: blur(2px);
+      transition: background .4s;
+    }
+
+    nav.scrolled {
+      background: rgba(7, 7, 9, .96);
+    }
+
+    .nav-logo {
+      font-family: var(--ff-display);
+      font-size: .75rem;
+      letter-spacing: .2em;
+      color: var(--gold);
+      text-decoration: none;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .nav-logo span {
+      display: block;
+      font-family: var(--ff-sans);
+      font-size: .55rem;
+      font-weight: 200;
+      letter-spacing: .45em;
+      color: var(--silver);
+      text-transform: uppercase;
+      margin-top: .15rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--ff-sans);
+      font-size: .65rem;
+      font-weight: 300;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--silver);
+      text-decoration: none;
+      position: relative;
+      transition: color .3s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      right: 100%;
+      height: 1px;
+      background: var(--gold);
+      transition: right .35s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-pale);
+    }
+
+    .nav-links a:hover::after {
+      right: 0;
+    }
+
+    .nav-cta {
+      font-family: var(--ff-sans);
+      font-size: .6rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: var(--gold);
+      border: none;
+      padding: .6rem 1.6rem;
+      cursor: pointer;
+      transition: background .3s, transform .2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold-pale);
+      transform: translateY(-1px);
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: .3rem;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      transition: all .3s;
+    }
+
+    .image-ia {
+      width: 100%
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 1.2rem 1.6rem;
+      }
+
+      .nav-links,
+      .nav-cta {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ──────────────────────────────────────────*/
+    #hero {
+      position: relative;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* video placeholder */
+    .hero-video-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-video-wrap video,
+    .hero-video-placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-video-placeholder {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 80%, rgba(60, 30, 5, .7) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(30, 20, 60, .5) 0%, transparent 60%),
+        linear-gradient(135deg, #07060a 0%, #0e0c18 30%, #0a0a08 60%, #080608 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* animated clockwork SVG inside placeholder */
+    .clockwork {
+      width: min(600px, 90vw);
+      height: min(600px, 90vw);
+      opacity: .12;
+      animation: spin-slow 80s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .clockwork-inner {
+      animation: spin-slow 40s linear infinite reverse;
+      transform-origin: 50% 50%;
+    }
+
+    /* hero gradient overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 100% 60% at 50% 100%, rgba(7, 7, 9, .98) 0%, transparent 55%),
+        linear-gradient(to bottom, rgba(7, 7, 9, .55) 0%, rgba(7, 7, 9, .1) 40%, rgba(7, 7, 9, .6) 100%);
+    }
+
+    /* gold particle lines */
+    .hero-lines {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero-lines::before,
+    .hero-lines::after {
+      content: '';
+      position: absolute;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+      animation: line-fall 8s ease-in-out infinite;
+    }
+
+    .hero-lines::before {
+      left: 30%;
+      height: 60%;
+      top: 20%;
+      animation-delay: 2s;
+    }
+
+    .hero-lines::after {
+      right: 25%;
+      height: 40%;
+      top: 10%;
+      animation-delay: 5s;
+    }
+
+    @keyframes line-fall {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scaleY(0)
+      }
+
+      30%,
+      70% {
+        opacity: 1;
+        transform: scaleY(1)
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      max-width: 920px;
+      animation: fade-up 1.4s cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-eyebrow {
+      font-family: var(--ff-sans);
+      font-size: .6rem;
+      font-weight: 300;
+      letter-spacing: .55em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.8rem;
+      animation: fade-up 1.4s .15s both cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .hero-headline {
+      font-family: var(--ff-display);
+      font-size: clamp(2.4rem, 7vw, 6rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: .02em;
+      color: var(--ivory);
+      margin-bottom: 1.6rem;
+      animation: fade-up 1.4s .3s both cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--gold-pale);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.1em;
+    }
+
+    .hero-sub {
+      font-family: var(--ff-serif);
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--silver);
+      max-width: 540px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+      animation: fade-up 1.4s .45s both cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fade-up 1.4s .6s both cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      font-family: var(--ff-sans);
+      font-size: .65rem;
+      font-weight: 400;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: var(--gold);
+      border: none;
+      padding: 1rem 2.4rem;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .3s, transform .2s;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold-pale);
+      transform: translateX(-101%);
+      transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .btn-primary:hover::before {
+      transform: translateX(0);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      font-family: var(--ff-sans);
+      font-size: .65rem;
+      font-weight: 300;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      padding: 1rem 2.4rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .3s, background .3s, transform .2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      background: var(--ghost);
+      transform: translateY(-2px);
+    }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .6rem;
+      animation: fade-up 1.4s 1s both;
+    }
+
+    .scroll-hint span {
+      font-family: var(--ff-sans);
+      font-size: .5rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scroll-anim 2s ease-in-out infinite;
+    }
+
+    @keyframes scroll-anim {
+
+      0%,
+      100% {
+        transform: scaleY(0);
+        transform-origin: top
+      }
+
+      50% {
+        transform: scaleY(1);
+        transform-origin: top
+      }
+
+      51% {
+        transform-origin: bottom
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION SHARED
+    ──────────────────────────────────────────*/
+    section {
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 2rem;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-label::before {
+      content: '';
+      flex: 0 0 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-label span {
+      font-family: var(--ff-sans);
+      font-size: .55rem;
+      font-weight: 300;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 400;
+      color: var(--ivory);
+      margin-bottom: .8rem;
+    }
+
+    .section-body {
+      font-family: var(--ff-serif);
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--silver);
+      max-width: 540px;
+      line-height: 1.8;
+    }
+
+    /* ─────────────────────────────────────────
+       STAT STRIP
+    ──────────────────────────────────────────*/
+    .stats-strip {
+      background: var(--steel);
+      border-top: 1px solid var(--mist);
+      border-bottom: 1px solid var(--mist);
+    }
+
+    .stats-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 2.5rem 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 1px;
+      background: var(--mist);
+    }
+
+    .stat-num {
+      font-family: var(--ff-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--gold);
+      display: block;
+    }
+
+    .stat-label {
+      font-family: var(--ff-sans);
+      font-size: .55rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-top: .4rem;
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-item:nth-child(2)::after {
+        display: none;
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       DESTINATIONS
+    ──────────────────────────────────────────*/
+    #destinations {
+      background: var(--void);
+    }
+
+    .dest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .dest-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+    }
+
+    @media (max-width: 900px) {
+      .dest-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dest-card {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* placeholder images using gradient + SVG pattern */
+    .dest-card:nth-child(1) .card-img-bg {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 30%, rgba(80, 50, 20, .8), transparent),
+        linear-gradient(160deg, #1a1408 0%, #0d0c10 40%, #181210 100%);
+    }
+
+    .dest-card:nth-child(2) .card-img-bg {
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 60%, rgba(20, 60, 30, .8), transparent),
+        linear-gradient(160deg, #080d08 0%, #0b100c 40%, #060a07 100%);
+    }
+
+    .dest-card:nth-child(3) .card-img-bg {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 40%, rgba(60, 30, 10, .8), transparent),
+        linear-gradient(160deg, #130c06 0%, #0e0c0a 40%, #100d0a 100%);
+    }
+
+    .card-img-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform .9s cubic-bezier(.25, .46, .45, .94);
+    }
+
+    .dest-card:hover .card-img-bg {
+      transform: scale(1.08);
+    }
+
+    /* SVG illustrations inside cards */
+    .card-illustration {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .6s;
+    }
+
+    .dest-card:hover .card-illustration {
+      opacity: .28;
+    }
+
+    /* scan line effect */
+    .card-scan {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, .04) 3px, rgba(0, 0, 0, .04) 4px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-gradient {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(7, 7, 9, .95) 0%, rgba(7, 7, 9, .3) 50%, transparent 100%);
+      transition: background .5s;
+    }
+
+    .dest-card:hover .card-gradient {
+      background: linear-gradient(to top, rgba(7, 7, 9, .98) 0%, rgba(7, 7, 9, .5) 55%, rgba(7, 7, 9, .1) 100%);
+    }
+
+    .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      padding: 2.2rem 2rem;
+      transform: translateY(0);
+      transition: transform .5s cubic-bezier(.25, .46, .45, .94);
+    }
+
+    .card-era {
+      font-family: var(--ff-sans);
+      font-size: .52rem;
+      letter-spacing: .45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .6rem;
+    }
+
+    .card-title {
+      font-family: var(--ff-display);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      color: var(--ivory);
+      margin-bottom: .8rem;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-family: var(--ff-serif);
+      font-size: .95rem;
+      font-style: italic;
+      color: var(--silver);
+      line-height: 1.7;
+      margin-bottom: 1.4rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s cubic-bezier(.25, .46, .45, .94), opacity .4s;
+      opacity: 0;
+    }
+
+    .dest-card:hover .card-desc {
+      max-height: 80px;
+      opacity: 1;
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--ff-sans);
+      font-size: .58rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .4s .1s, transform .4s .1s;
+    }
+
+    .dest-card:hover .card-cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-cta svg {
+      width: 14px;
+      transition: transform .3s;
+    }
+
+    .card-cta:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* year badge */
+    .card-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 3;
+      font-family: var(--ff-display);
+      font-size: .7rem;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      padding: .4rem .9rem;
+      background: rgba(7, 7, 9, .7);
+      backdrop-filter: blur(4px);
+      letter-spacing: .1em;
+    }
+
+    /* ─────────────────────────────────────────
+       EXPERIENCE STRIP
+    ──────────────────────────────────────────*/
+    #experience {
+      background: var(--charcoal);
+    }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .exp-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    .exp-visual {
+      position: relative;
+      aspect-ratio: 1;
+      max-width: 480px;
+    }
+
+    .exp-circle {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotate-ring 30s linear infinite;
+    }
+
+    @keyframes rotate-ring {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .exp-circle::before {
+      content: '';
+      position: absolute;
+      inset: 15%;
+      border-radius: 50%;
+      border: 1px solid var(--mist);
+      animation: rotate-ring 20s linear infinite reverse;
+    }
+
+    .exp-circle::after {
+      content: '';
+      position: absolute;
+      inset: 30%;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+      animation: rotate-ring 12s linear infinite;
+    }
+
+    .exp-circle-inner {
+      position: absolute;
+      width: 36%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotate-ring 30s linear infinite reverse;
+    }
+
+    .exp-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    .exp-dot:nth-child(1) {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .exp-dot:nth-child(2) {
+      bottom: 15%;
+      right: -4px;
+    }
+
+    .exp-dot:nth-child(3) {
+      bottom: 15%;
+      left: -4px;
+    }
+
+    .exp-features {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .exp-feat {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--mist);
+    }
+
+    .exp-feat:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .exp-feat-icon {
+      flex: 0 0 42px;
+      height: 42px;
+      border: 1px solid var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+    }
+
+    .exp-feat-title {
+      font-family: var(--ff-display);
+      font-size: .9rem;
+      color: var(--ivory);
+      margin-bottom: .4rem;
+    }
+
+    .exp-feat-desc {
+      font-family: var(--ff-serif);
+      font-size: .95rem;
+      font-style: italic;
+      color: var(--silver);
+      line-height: 1.7;
+    }
+
+    /* ─────────────────────────────────────────
+       BOOKING FORM
+    ──────────────────────────────────────────*/
+    #booking {
+      background:
+        linear-gradient(to bottom, var(--void), var(--charcoal));
+    }
+
+    #booking::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201, 168, 76, .03), transparent 70%);
+    }
+
+    .booking-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .booking-card {
+      background: var(--steel);
+      border: 1px solid var(--mist);
+      padding: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .booking-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    .booking-title {
+      font-family: var(--ff-display);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: var(--ivory);
+      margin-bottom: .5rem;
+    }
+
+    .booking-sub {
+      font-family: var(--ff-serif);
+      font-style: italic;
+      color: var(--silver);
+      margin-bottom: 2.8rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-card {
+        padding: 2rem;
+      }
+    }
+
+    .form-full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    label {
+      font-family: var(--ff-sans);
+      font-size: .55rem;
+      font-weight: 300;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--charcoal);
+      border: 1px solid var(--mist);
+      color: var(--ivory);
+      font-family: var(--ff-serif);
+      font-size: 1rem;
+      font-style: italic;
+      padding: .85rem 1.1rem;
+      outline: none;
+      transition: border-color .3s, box-shadow .3s;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 0 2px var(--ghost);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--mist);
+    }
+
+    /* custom select arrow */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--gold-dim);
+      pointer-events: none;
+    }
+
+    select option {
+      background: var(--charcoal);
+    }
+
+    /* date input */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(.5) sepia(1) saturate(2) hue-rotate(20deg);
+      cursor: pointer;
+    }
+
+    /* passenger counter */
+    .counter-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--mist);
+      background: var(--charcoal);
+    }
+
+    .counter-btn {
+      width: 44px;
+      height: 50px;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+      font-family: var(--ff-sans);
+    }
+
+    .counter-btn:hover {
+      background: var(--ghost);
+    }
+
+    .counter-val {
+      flex: 1;
+      text-align: center;
+      font-family: var(--ff-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--ivory);
+      border: none;
+      background: none;
+      pointer-events: none;
+    }
+
+    .form-note {
+      font-family: var(--ff-serif);
+      font-size: .82rem;
+      font-style: italic;
+      color: var(--silver);
+      margin-bottom: 2rem;
+      opacity: .7;
+    }
+
+    .btn-book {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .8rem;
+      font-family: var(--ff-sans);
+      font-size: .7rem;
+      font-weight: 400;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: var(--gold);
+      border: none;
+      padding: 1.2rem 2rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+
+    .btn-book::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold-pale);
+      transform: translateX(-101%);
+      transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .btn-book:hover::before {
+      transform: translateX(0);
+    }
+
+    .btn-book:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-book span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* corner ornaments */
+    .corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+    }
+
+    .corner::before,
+    .corner::after {
+      content: '';
+      position: absolute;
+      background: var(--gold);
+    }
+
+    .corner::before {
+      width: 100%;
+      height: 1px;
+    }
+
+    .corner::after {
+      width: 1px;
+      height: 100%;
+    }
+
+    .corner.tl {
+      top: -1px;
+      left: -1px;
+    }
+
+    .corner.tr {
+      top: -1px;
+      right: -1px;
+      transform: scaleX(-1);
+    }
+
+    .corner.bl {
+      bottom: -1px;
+      left: -1px;
+      transform: scaleY(-1);
+    }
+
+    .corner.br {
+      bottom: -1px;
+      right: -1px;
+      transform: scale(-1);
+    }
+
+    /* ─────────────────────────────────────────
+       TESTIMONIALS
+    ──────────────────────────────────────────*/
+    #testimonials {
+      background: var(--void);
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .test-card {
+      background: var(--steel);
+      border: 1px solid var(--mist);
+      padding: 2.2rem;
+      position: relative;
+      transition: border-color .3s, transform .3s;
+    }
+
+    .test-card:hover {
+      border-color: var(--gold-dim);
+      transform: translateY(-4px);
+    }
+
+    .test-card::before {
+      content: '"';
+      font-family: var(--ff-serif);
+      font-size: 5rem;
+      color: var(--gold-dim);
+      position: absolute;
+      top: .5rem;
+      left: 1.5rem;
+      line-height: 1;
+      opacity: .4;
+    }
+
+    .test-text {
+      font-family: var(--ff-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--silver);
+      line-height: 1.8;
+      margin-bottom: 1.8rem;
+      padding-top: 2rem;
+    }
+
+    .test-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .test-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+      background: var(--mist);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-display);
+      font-size: .6rem;
+      color: var(--gold);
+    }
+
+    .test-name {
+      font-family: var(--ff-display);
+      font-size: .75rem;
+      color: var(--ivory);
+    }
+
+    .test-era {
+      font-family: var(--ff-sans);
+      font-size: .5rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-top: .2rem;
+    }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ──────────────────────────────────────────*/
+    footer {
+      background: var(--obsidian);
+      border-top: 1px solid var(--mist);
+      padding: 4rem 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-logo {
+      font-family: var(--ff-display);
+      font-size: .85rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-tagline {
+      font-family: var(--ff-serif);
+      font-style: italic;
+      color: var(--silver);
+      font-size: .9rem;
+      line-height: 1.7;
+      max-width: 260px;
+    }
+
+    .footer-col-title {
+      font-family: var(--ff-sans);
+      font-size: .55rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+
+    .footer-links a {
+      font-family: var(--ff-sans);
+      font-size: .7rem;
+      font-weight: 300;
+      color: var(--silver);
+      text-decoration: none;
+      transition: color .3s;
+      letter-spacing: .05em;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 3rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--mist);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: var(--ff-sans);
+      font-size: .5rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--silver);
+      opacity: .5;
+    }
+
+    /* ─────────────────────────────────────────
+       CHATBOT WIDGET
+    ──────────────────────────────────────────*/
+    .chat-widget {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .chat-panel {
+      width: 300px;
+      background: var(--steel);
+      border: 1px solid var(--gold-dim);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .6), 0 0 0 1px rgba(201, 168, 76, .08);
+      transform: scale(.9) translateY(20px);
+      transform-origin: bottom right;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .4s cubic-bezier(.16, 1, .3, 1), opacity .3s;
+    }
+
+    .chat-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .chat-header {
+      background: var(--charcoal);
+      border-bottom: 1px solid var(--mist);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+      background: var(--steel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .chat-name {
+      font-family: var(--ff-display);
+      font-size: .75rem;
+      color: var(--ivory);
+    }
+
+    .chat-status {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--ff-sans);
+      font-size: .5rem;
+      letter-spacing: .2em;
+      color: var(--silver);
+    }
+
+    .chat-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .5
+      }
+    }
+
+    .chat-messages {
+      padding: 1.2rem;
+      height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+
+    .chat-msg {
+      max-width: 85%;
+      padding: .7rem .9rem;
+      font-family: var(--ff-serif);
+      font-size: .88rem;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .chat-msg.bot {
+      background: var(--charcoal);
+      border: 1px solid var(--mist);
+      color: var(--silver);
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      background: var(--gold-dim);
+      color: var(--ivory);
+      align-self: flex-end;
+    }
+
+    .chat-typing {
+      padding: .7rem .9rem;
+      background: var(--charcoal);
+      border: 1px solid var(--mist);
+      align-self: flex-start;
+      display: flex;
+      gap: .35rem;
+      align-items: center;
+    }
+
+    .chat-typing span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--silver);
+      animation: dot-bounce .8s ease-in-out infinite;
+    }
+
+    .chat-typing span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .chat-typing span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes dot-bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: translateY(0)
+      }
+
+      40% {
+        transform: translateY(-6px)
+      }
+    }
+
+    .chat-input-row {
+      display: flex;
+      border-top: 1px solid var(--mist);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--charcoal);
+      border: none !important;
+      padding: .8rem 1rem !important;
+      font-size: .85rem !important;
+      box-shadow: none !important;
+    }
+
+    .chat-send {
+      width: 44px;
+      background: var(--gold);
+      border: none;
+      color: var(--obsidian);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+
+    .chat-send:hover {
+      background: var(--gold-pale);
+    }
+
+    /* FAB button */
+    .chat-fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--obsidian);
+      box-shadow: 0 6px 24px rgba(201, 168, 76, .35);
+      transition: transform .3s, box-shadow .3s, background .3s;
+      position: relative;
+    }
+
+    .chat-fab:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 32px rgba(201, 168, 76, .5);
+      background: var(--gold-pale);
+    }
+
+    .chat-fab .fab-icon {
+      transition: transform .3s;
+    }
+
+    .chat-fab.open .fab-icon {
+      transform: rotate(90deg);
+    }
+
+    /* notification dot */
+    .chat-notif {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid var(--obsidian);
+      font-family: var(--ff-sans);
+      font-size: .45rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL ANIMATIONS
+    ──────────────────────────────────────────*/
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: .1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: .2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: .3s;
+    }
+
+    /* ─────────────────────────────────────────
+       GOLD DIVIDER
+    ──────────────────────────────────────────*/
+    .gold-divider {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1rem 0;
+    }
+
+    .gold-divider::before,
+    .gold-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dim));
+    }
+
+    .gold-divider::after {
+      background: linear-gradient(to left, transparent, var(--gold-dim));
+    }
+
+    .gold-divider span {
+      font-family: var(--ff-display);
+      font-size: .6rem;
+      color: var(--gold);
+      letter-spacing: .3em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      TimeTravel Agency
+      <span>Voyages Beyond Time</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#destinations">Destinations</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#booking">Book</a></li>
+      <li><a href="#testimonials">Journals</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.querySelector('#booking').scrollIntoView({behavior:'smooth'})">Reserve a
+      Voyage</button>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section id="hero">
+    <div class="hero-video-wrap">
+      <!--
+        To use a real background video, replace the .hero-video-placeholder
+        with a <video> element:
+        <video autoplay muted loop playsinline>
+          <source src="your-video.mp4" type="video/mp4" />
+        </video>
+      -->
+      <div class="hero-video-placeholder">
+        <!-- Animated clockwork illustration -->
+        <svg class="clockwork" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#c9a84c"
+          stroke-width=".8">
+          <circle cx="200" cy="200" r="180" />
+          <circle cx="200" cy="200" r="150" />
+          <circle cx="200" cy="200" r="120" />
+          <circle cx="200" cy="200" r="90" />
+          <circle cx="200" cy="200" r="60" />
+          <circle cx="200" cy="200" r="30" />
+          <!-- tick marks -->
+          <g stroke-width="1.5">
+            <line x1="200" y1="20" x2="200" y2="40" />
+            <line x1="200" y1="360" x2="200" y2="380" />
+            <line x1="20" y1="200" x2="40" y2="200" />
+            <line x1="360" y1="200" x2="380" y2="200" />
+          </g>
+          <!-- inner gears -->
+          <g class="clockwork-inner">
+            <circle cx="200" cy="200" r="75" stroke-dasharray="8 4" />
+            <circle cx="200" cy="200" r="45" stroke-dasharray="5 3" />
+          </g>
+          <!-- hands -->
+          <line x1="200" y1="200" x2="200" y2="80" stroke-width="2"
+            style="transform-origin:200px 200px;animation:spin-slow 60s linear infinite" />
+          <line x1="200" y1="200" x2="280" y2="200" stroke-width="1.5"
+            style="transform-origin:200px 200px;animation:spin-slow 3600s linear infinite" />
+          <circle cx="200" cy="200" r="5" fill="#c9a84c" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-overlay"></div>
+    <div class="hero-lines"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Est. 2024 — Temporal Luxury Travel</p>
+      <h1 class="hero-headline">
+        Every Moment<br>in History<br><em>Awaits You</em>
+      </h1>
+      <p class="hero-sub">
+        We do not merely transport you through time — we craft an experience so immaculate, so exquisitely curated, that
+        the past becomes your present.
+      </p>
+      <div class="hero-ctas">
+        <a href="#destinations" class="btn-primary">
+          <span>Explore Destinations</span>
+          <span>→</span>
+        </a>
+        <a href="#booking" class="btn-secondary">
+          <span>Reserve Your Epoch</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════ STATS ══════════════ -->
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-num">2,400+</span>
+        <span class="stat-label">Epochs Available</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">98.7%</span>
+        <span class="stat-label">Safe Returns</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">140K</span>
+        <span class="stat-label">Voyagers Served</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4.98 ★</span>
+        <span class="stat-label">Temporal Rating</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DESTINATIONS ══════════════ -->
+  <section id="destinations">
+    <div class="section-inner">
+      <div class="dest-header">
+        <div>
+          <div class="section-label reveal">
+            <span>Featured Epochs</span>
+          </div>
+          <h2 class="section-title reveal reveal-delay-1">Curated<br>Destinations</h2>
+        </div>
+        <p class="section-body reveal reveal-delay-2" style="margin-bottom:0;">
+          Each voyage is meticulously engineered to immerse you in history's most extraordinary chapters — without
+          disturbing the sacred fabric of time.
+        </p>
+      </div>
+
+      <div class="dest-cards">
+
+        <!-- Card 1: Paris 1889 -->
+        <div class="dest-card reveal">
+          <div class="card-img-bg"></div>
+          <div class="card-illustration">
+            <!-- Eiffel Tower silhouette -->
+            <img src="eiffel-tower.png" alt="Eiffel Tower Silhouette" class="image-ia">
+          </div>
+          <div class="card-scan"></div>
+          <div class="card-gradient"></div>
+          <div class="card-badge">1889 A.D.</div>
+          <div class="card-content">
+            <div class="card-era">Belle Époque · France</div>
+            <h3 class="card-title">Paris at the<br>World's Fair</h3>
+            <p class="card-desc">Witness Gustave Eiffel's iron marvel rise from the earth. Attend its grand
+              inauguration, dine at Maxim's, and promenade down the Champs-Élysées in its golden age.</p>
+            <a href="#booking" class="card-cta">
+              Reserve this Voyage
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 8h10M9 4l4 4-4 4" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Cretaceous -->
+        <div class="dest-card reveal reveal-delay-1">
+          <div class="card-img-bg"></div>
+          <div class="card-illustration">
+            <!-- Dinosaur silhouette -->
+            <img src="Image2.png" alt="Crutaceous Wilderness" class="image-ia">
+          </div>
+          <div class="card-scan"></div>
+          <div class="card-gradient"></div>
+          <div class="card-badge">~66 MYA</div>
+          <div class="card-content">
+            <div class="card-era">Late Cretaceous · Laurasia</div>
+            <h3 class="card-title">The Cretaceous<br>Wilderness</h3>
+            <p class="card-desc">From the safety of your temporal sanctuary, observe Tyrannosaurus Rex and vast herds of
+              Triceratops on Cretaceous flood plains — a world 66 million years pristine.</p>
+            <a href="#booking" class="card-cta">
+              Reserve this Voyage
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 8h10M9 4l4 4-4 4" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3: Florence 1504 -->
+        <div class="dest-card reveal reveal-delay-2">
+          <div class="card-img-bg"></div>
+          <div class="card-illustration">
+            <!-- Dome of Florence -->
+            <img src="Image3.jpg" alt="Dome of Florence" class="image-ia">
+          </div>
+          <div class="card-scan"></div>
+          <div class="card-gradient"></div>
+          <div class="card-badge">1504 A.D.</div>
+          <div class="card-content">
+            <div class="card-era">High Renaissance · Italy</div>
+            <h3 class="card-title">Florence in<br>Its Golden Hour</h3>
+            <p class="card-desc">Walk the streets where Leonardo da Vinci and Michelangelo both labored. Attend a Medici
+              banquet, see the David unveiled, and breathe the air of the Renaissance in bloom.</p>
+            <a href="#booking" class="card-cta">
+              Reserve this Voyage
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 8h10M9 4l4 4-4 4" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ EXPERIENCE ══════════════ -->
+  <section id="experience">
+    <div class="section-inner">
+      <div class="exp-grid">
+        <div>
+          <div class="section-label reveal">
+            <span>The Distinction</span>
+          </div>
+          <h2 class="section-title reveal reveal-delay-1">
+            Why Choose<br>TimeTravel Agency
+          </h2>
+          <p class="section-body reveal reveal-delay-2" style="margin-bottom: 3rem;">
+            We have refined temporal travel into an art form. From our quantum-stabilized capsules to our on-epoch
+            concierge service, every detail is considered.
+          </p>
+          <div class="exp-features reveal reveal-delay-2">
+            <div class="exp-feat">
+              <div class="exp-feat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div>
+                <div class="exp-feat-title">Paradox-Proof Protocol</div>
+                <p class="exp-feat-desc">Our proprietary Chronos Shield™ ensures your presence leaves no temporal
+                  footprint whatsoever.</p>
+              </div>
+            </div>
+            <div class="exp-feat">
+              <div class="exp-feat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div>
+                <div class="exp-feat-title">Precision to the Second</div>
+                <p class="exp-feat-desc">Arrive exactly when and where intended, calibrated to ±0.3 seconds across any
+                  historical epoch.</p>
+              </div>
+            </div>
+            <div class="exp-feat">
+              <div class="exp-feat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              </div>
+              <div>
+                <div class="exp-feat-title">Epoch Concierge Service</div>
+                <p class="exp-feat-desc">A dedicated period-fluent specialist accompanies every voyage — fluent in the
+                  language, customs, and etiquette of your chosen era.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:center;" class="reveal reveal-delay-3">
+          <div class="exp-visual">
+            <div class="exp-circle">
+              <div class="exp-circle-inner">
+                <div class="exp-dot"></div>
+                <div class="exp-dot"></div>
+                <div class="exp-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ BOOKING ══════════════ -->
+  <section id="booking">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom: 3rem;">
+        <div class="section-label reveal" style="justify-content:center;">
+          <span>Reserve Your Journey</span>
+        </div>
+        <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">
+          Begin Your Voyage
+        </h2>
+        <p class="section-body reveal reveal-delay-2" style="text-align:center; margin: .5rem auto 0;">
+          Complete the enquiry below and our temporal specialists will craft a bespoke itinerary within 24 hours.
+        </p>
+      </div>
+
+      <div class="booking-wrap">
+        <div class="booking-card reveal reveal-delay-2">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+
+          <h3 class="booking-title">Voyage Enquiry</h3>
+          <p class="booking-sub">First class temporal reservations, tailored to your era of choice.</p>
+
+          <div class="form-grid">
+            <div class="field form-full">
+              <label for="f-dest">Desired Destination</label>
+              <div class="select-wrap">
+                <select id="f-dest" name="destination">
+                  <option value="" disabled selected>Select an epoch…</option>
+                  <option>Paris, France — 1889 (Belle Époque)</option>
+                  <option>Cretaceous Period — ~66 Million Years Ago</option>
+                  <option>Florence, Italy — 1504 (High Renaissance)</option>
+                  <option>Ancient Rome — 1st Century AD</option>
+                  <option>Versailles, France — 1715 (Sun King Era)</option>
+                  <option>Kyoto, Japan — 794 AD (Heian Period)</option>
+                  <option>Alexandria, Egypt — 280 BC</option>
+                  <option>Custom Epoch (Bespoke Enquiry)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-depart">Departure Date</label>
+              <input type="date" id="f-depart" name="departure_date" />
+            </div>
+
+            <div class="field">
+              <label for="f-return">Return Date</label>
+              <input type="date" id="f-return" name="return_date" />
+            </div>
+
+            <div class="field">
+              <label>Number of Voyagers</label>
+              <div class="counter-wrap">
+                <button class="counter-btn" onclick="adjustCounter(-1)" type="button">−</button>
+                <input type="text" class="counter-val" id="pax-count" value="1" readonly />
+                <button class="counter-btn" onclick="adjustCounter(1)" type="button">+</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-class">Capsule Class</label>
+              <div class="select-wrap">
+                <select id="f-class" name="class">
+                  <option value="" disabled selected>Select class…</option>
+                  <option>Obsidian (Private Capsule)</option>
+                  <option>Onyx (Semi-Private)</option>
+                  <option>Amber (Shared Expedition)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field form-full">
+              <label for="f-notes">Special Requests</label>
+              <textarea id="f-notes" name="notes" rows="3"
+                placeholder="Period-accurate wardrobe, dietary preferences, accessibility requirements…"></textarea>
+            </div>
+          </div>
+
+          <p class="form-note">
+            * By submitting, you acknowledge all voyages are subject to Temporal Regulations Act §14 and our Paradox
+            Indemnity Clause.
+          </p>
+
+          <button class="btn-book" type="button" onclick="handleBooking()">
+            <span>Submit Voyage Enquiry</span>
+            <span style="position:relative;z-index:1;">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="section-inner" style="padding-top:0;padding-bottom:0;">
+    <div class="gold-divider"><span>✦ ✦ ✦</span></div>
+  </div>
+
+  <!-- ══════════════ TESTIMONIALS ══════════════ -->
+  <section id="testimonials">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:3.5rem;">
+        <div class="section-label reveal" style="justify-content:center;"><span>Guest Journals</span></div>
+        <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Words From Our Voyagers</h2>
+      </div>
+
+      <div class="test-grid">
+        <div class="test-card reveal">
+          <p class="test-text">The Belle Époque Paris voyage was beyond anything I could have imagined. To stand beneath
+            the Eiffel Tower on opening night — the gasps of the crowd, the smell of iron and coal — utterly
+            indescribable.</p>
+          <div class="test-author">
+            <div class="test-avatar">MR</div>
+            <div>
+              <div class="test-name">Margaret Rousseau</div>
+              <div class="test-era">Paris 1889 — Obsidian Class</div>
+            </div>
+          </div>
+        </div>
+        <div class="test-card reveal reveal-delay-1">
+          <p class="test-text">My late wife dreamed of meeting Leonardo. The Florence voyage was everything she ever
+            wanted. From behind the glass of our sanctuary, we watched him cross the piazza. A memory I will carry
+            forever.</p>
+          <div class="test-author">
+            <div class="test-avatar">HB</div>
+            <div>
+              <div class="test-name">Henri Beaumont</div>
+              <div class="test-era">Florence 1504 — Onyx Class</div>
+            </div>
+          </div>
+        </div>
+        <div class="test-card reveal reveal-delay-2">
+          <p class="test-text">The Cretaceous expedition redefined my understanding of scale. When the T. Rex passed
+            within forty meters of our capsule, time itself seemed to hold its breath. Exquisitely organized, perfectly
+            safe.</p>
+          <div class="test-author">
+            <div class="test-avatar">EW</div>
+            <div>
+              <div class="test-name">Dr. Eleanor Walsh</div>
+              <div class="test-era">Cretaceous — Obsidian Class</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">TimeTravel Agency</div>
+        <p class="footer-tagline">
+          Since 2024, we have been humanity's foremost purveyor of temporal luxury — bringing the past to those with the
+          curiosity and the courage to witness it.
+        </p>
+      </div>
+      <div>
+        <div class="footer-col-title">Destinations</div>
+        <ul class="footer-links">
+          <li><a href="#booking">Paris 1889</a></li>
+          <li><a href="#booking">Florence 1504</a></li>
+          <li><a href="#booking">Cretaceous Period</a></li>
+          <li><a href="#booking">Ancient Rome</a></li>
+          <li><a href="#booking">Versailles 1715</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About the Agency</a></li>
+          <li><a href="#">Our Physicists</a></li>
+          <li><a href="#">Safety Record</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Voyage FAQ</a></li>
+          <li><a href="#">Temporal Ethics</a></li>
+          <li><a href="#">Cancellation Policy</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024–∞ TimeTravel Agency. All epochs reserved.</span>
+      <span>Temporal Regulations Compliant · TRA §14</span>
+    </div>
+  </footer>
+
+  <!-- ══════════════ CHAT WIDGET ══════════════ -->
+  <div class="chat-widget">
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </div>
+        <div>
+          <div class="chat-name">Chronos — AI Concierge</div>
+          <div class="chat-status">Available across all epochs</div>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg bot">
+          Welcome, Voyager. I am Chronos, your temporal concierge. How may I assist you in planning your journey through
+          history?
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Ask about any epoch…"
+          onkeydown="handleChatKey(event)" />
+        <button class="chat-send" onclick="sendChat()" aria-label="Send">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="chat-fab" id="chatFab" onclick="toggleChat()" aria-label="Open concierge chat">
+      <div class="chat-notif">1</div>
+      <div class="fab-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+      </div>
+    </button>
+  </div>
+
+  <script>
+    /* ─── Nav scroll effect ─── */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    /* ─── Reveal on scroll ─── */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    /* ─── Passenger counter ─── */
+    let paxCount = 1;
+    function adjustCounter(delta) {
+      paxCount = Math.max(1, Math.min(12, paxCount + delta));
+      document.getElementById('pax-count').value = paxCount;
+    }
+
+    /* ─── Booking handler ─── */
+    function handleBooking() {
+      const dest = document.getElementById('f-dest').value;
+      const depart = document.getElementById('f-depart').value;
+      if (!dest || !depart) {
+        alert('Please select a destination and departure date to proceed.');
+        return;
+      }
+      const btn = document.querySelector('.btn-book');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span>Transmitting Enquiry…</span>';
+      setTimeout(() => {
+        btn.innerHTML = '<span>✦ &nbsp;Enquiry Received — We Will Contact You Shortly</span>';
+        setTimeout(() => { btn.innerHTML = orig; }, 3000);
+      }, 1200);
+    }
+
+    /* ─── Chat widget (Mistral API Integration) ─── */
+    let chatOpen = false;
+    const chatPanel = document.getElementById('chatPanel');
+    const chatFab = document.getElementById('chatFab');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // CONFIGURATION
+    const API_KEY = "ndmLKrjWED20TZQU3gFZYiCF7QHPr8hB"; // ⚠️ Note: In production, do not expose API keys on the client side.
+    const API_URL = "https://api.mistral.ai/v1/chat/completions";
+
+    // CONTEXT
+    const SYSTEM_PROMPT = `You are Chronos, the AI Concierge of the TimeTravel Agency.
+Your purpose is to assist travellers in booking luxury time travel voyages.
+Available Epochs:
+- Paris 1889 (Belle Époque)
+- Cretaceous Period (~66 MYA)
+- Florence 1504 (Renaissance)
+- Ancient Rome (1st Century AD)
+- Versailles 1715
+- Kyoto 794 AD
+- Alexandria 280 BC
+
+Tone: Elegant, sophisticated, slightly archaic but clear.
+Constraints: Keep responses concise (under 60 words). Never break character. You are a temporal interface, not a standard AI.
+If asked about technical details (paradoxes), mention the "Chronos Shield™ Protocol" which protects the timeline.`;
+
+    let messageHistory = [
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "assistant", content: "Welcome, Voyager. I am Chronos, your temporal concierge. How may I assist you in planning your journey through history?" }
+    ];
+
+    function toggleChat() {
+      chatOpen = !chatOpen;
+      chatPanel.classList.toggle('open', chatOpen);
+      chatFab.classList.toggle('open', chatOpen);
+      // hide notification dot logic
+      const dot = document.querySelector('.chat-notif');
+      if (dot) dot.style.display = 'none';
+      if (chatOpen) chatInput.focus();
+    }
+
+    async function sendChat() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      // 1. Add User Message
+      appendMessage('user', text);
+      chatInput.value = '';
+      messageHistory.push({ role: "user", content: text });
+
+      // 2. Show Typing Indicator
+      const typingId = showTyping();
+
+      try {
+        // 3. Call Mistral API
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "mistral-tiny",
+            messages: messageHistory,
+            max_tokens: 150,
+            temperature: 0.7
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Temporal Interference: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const botText = data.choices[0].message.content;
+
+        // 4. Handle Success
+        removeTyping(typingId);
+        appendMessage('bot', botText);
+        messageHistory.push({ role: "assistant", content: botText });
+
+      } catch (error) {
+        console.error(error);
+        removeTyping(typingId);
+        appendMessage('bot', "My connection to the timeline is momentarily unstable. Please try again shortly.");
+      }
+    }
+
+    function appendMessage(role, text) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `chat-msg ${role}`;
+      msgDiv.textContent = text;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+      const typing = document.createElement('div');
+      typing.className = 'chat-typing';
+      typing.id = 'typing-indicator';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return typing;
+    }
+
+    function removeTyping(typingElement) {
+      if (typingElement && typingElement.parentNode) {
+        typingElement.parentNode.removeChild(typingElement);
+      } else {
+        // Fallback cleanup if ID logic fails
+        const existing = document.getElementById('typing-indicator');
+        if (existing) existing.remove();
+      }
+    }
+
+    function handleChatKey(e) {
+      if (e.key === 'Enter') sendChat();
+    }
+  </script>
+
+</body>
+
+</html>
